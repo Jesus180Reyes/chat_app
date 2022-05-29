@@ -74,8 +74,7 @@ class _FormState extends StatelessWidget {
           BotonAzulWidget(
             texto: 'Ingrese',
             onPressed: () {
-              print(emailController.text);
-              print(passwordController.text);
+              //  TODO: implementar
             },
             colors: Colors.blue,
           ),
