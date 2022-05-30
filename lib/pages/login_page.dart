@@ -1,9 +1,14 @@
+// ignore_for_file: null_check_always_fails
+
+import 'package:chat_app/helpers/mostrar_alerta.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:chat_app/widgets/btn_azul.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/labels_widget.dart';
 import 'package:chat_app/widgets/logo_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -51,6 +56,7 @@ class _FormState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authServices = Provider.of<AuthServices>(context, listen: true);
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
     return Container(
@@ -73,8 +79,21 @@ class _FormState extends StatelessWidget {
           ),
           BotonAzulWidget(
             texto: 'Ingrese',
-            onPressed: () {
-              //  TODO: implementar
+            onPressed: () async {
+              FocusScope.of(context).unfocus();
+              final loginOk = await authServices.login(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim(),
+              );
+              if (loginOk) {
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              } else {
+                mostrarAlerta(
+                  context,
+                  'Credenciales Incorreectas',
+                  'Revise sus credenciales nuevamente',
+                );
+              }
             },
             colors: Colors.blue,
           ),

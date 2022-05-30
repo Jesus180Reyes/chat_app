@@ -1,14 +1,32 @@
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('LoadingPage'),
+    return Scaffold(
+      body: FutureBuilder(
+        future: checkLoginState(context),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          return const Center(
+            child: Text('Autenticando....'),
+          );
+        },
       ),
     );
+  }
+
+  Future checkLoginState(context) async {
+    final authService = Provider.of<AuthServices>(context, listen: false);
+    final autenticando = await authService.isLoggedIn();
+
+    if (autenticando!) {
+      Navigator.pushReplacementNamed(context, 'usuarios');
+    } else {
+      Navigator.pushReplacementNamed(context, 'login');
+    }
   }
 }

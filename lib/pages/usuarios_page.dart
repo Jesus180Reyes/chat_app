@@ -1,5 +1,7 @@
 import 'package:chat_app/models/usuario.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UsuariosPage extends StatefulWidget {
@@ -14,37 +16,43 @@ class _UsuariosPageState extends State<UsuariosPage> {
     initialRefresh: false,
   );
   final usuarios = [
-    Usuario(
-      isOnline: true,
-      email: 'luisdejesus200122@gmail.com',
-      nombre: 'Melissa',
-      uid: '1',
-    ),
-    Usuario(
-      isOnline: true,
-      email: 'luisdejesus200122@gmail.com',
-      nombre: 'Maria',
-      uid: '2',
-    ),
-    Usuario(
-      isOnline: false,
-      email: 'luisdejesus200122@gmail.com',
-      nombre: 'Fernando',
-      uid: '3',
-    ),
+    // Usuario(
+    //   isOnline: true,
+    //   email: 'luisdejesus200122@gmail.com',
+    //   nombre: 'Melissa',
+    //   uid: '1',
+    // ),
+    // Usuario(
+    //   isOnline: true,
+    //   email: 'luisdejesus200122@gmail.com',
+    //   nombre: 'Maria',
+    //   uid: '2',
+    // ),
+    // Usuario(
+    //   isOnline: false,
+    //   email: 'luisdejesus200122@gmail.com',
+    //   nombre: 'Fernando',
+    //   uid: '3',
+    // ),
   ];
   @override
   Widget build(BuildContext context) {
+    final authServices = Provider.of<AuthServices>(context);
+    final usuario = authServices.usuario;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Mi nombre es',
-          style: TextStyle(color: Colors.black87),
+        centerTitle: true,
+        title: Text(
+          usuario!.nombre,
+          style: const TextStyle(color: Colors.black87),
         ),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.restorablePushReplacementNamed(context, 'login');
+            AuthServices.deleteToken();
+          },
           icon: const Icon(
             Icons.exit_to_app,
             color: Colors.black87,
